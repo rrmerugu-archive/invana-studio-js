@@ -1,15 +1,15 @@
 import React from "react";
 import "./App.css";
-import GraphExplorer from "./graph-explorer/graph-explorer";
+import GECanvas from "./graph-explorer/canvas";
 
 export default class App extends React.Component {
 
     render() {
         return (
             <div className="App">
-                {/*<h1>Hello graph-explorer.js</h1>*/}
+                {/*<h1>Hello canvas.js</h1>*/}
                 {/*<p>cytoscape.js experiments to visualise GraphSON data.</p>*/}
-                <GraphExplorer/>
+                <GECanvas/>
             </div>
         );
     }

@@ -31,7 +31,7 @@ export const defaultLayoutOptions = {
 
     // different methods of specifying edge length
     // each can be a constant numerical value or a function like `function( edge ){ return 2; }`
-    edgeLength: 200, // sets edge length directly in simulation
+    edgeLength: 250, // sets edge length directly in simulation
     edgeSymDiffLength: undefined, // symmetric diff edge length in simulation
     edgeJaccardLength: undefined, // jaccard edge length in simulation
 

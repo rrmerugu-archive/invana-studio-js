@@ -2,15 +2,17 @@ import React from "react";
 import cytoscape from "cytoscape";
 import GEHeader from "./header";
 import {defaultCytoscapeOptions, defaultLayoutOptions} from "./dev/defaults";
-import "./graph-explorer.scss";
+import "./canvas.scss";
 import cola from "cytoscape-cola";
+import GEEvents from "./events";
 
 cytoscape.use(cola);
 
-export default class GraphExplorer extends React.Component {
+export default class GECanvas extends React.Component {
 
     componentDidMount() {
         this.cy = this.createCytoscapeInstance();
+        this.setupNodeEvents(); //
     }
 
     createCytoscapeInstance() {
@@ -19,6 +21,23 @@ export default class GraphExplorer extends React.Component {
         layoutOptions.container = document.querySelector("#graph-canvas");
         layoutOptions.layout = defaultLayoutOptions;
         return cytoscape(layoutOptions);
+    }
+
+    setupNodeEvents() {
+        /*
+        this will set events for what happens when node is
+        hovered, clicked, dragged, drag stopped etc.
+
+         */
+        const events = new GEEvents();
+
+        this.cy.on('tap', (event) => events.OnTap(event, this.cy));
+
+        this.cy.on('tapdrag', (event) => events.onTagDrag(event, this.cy));
+        this.cy.on('tapdragout', (event) => events.onTapDragOut(event, this.cy));
+
+        this.cy.on('tapstart', (event) => events.onTapStart(event, this.cy));
+        this.cy.on('tapend', (event) => events.onTapEnded(event, this.cy));
     }
 
     lockNodes() {
@@ -75,9 +94,10 @@ export default class GraphExplorer extends React.Component {
         return this.cy;
     }
 
-    set_cy(cy){
+    set_cy(cy) {
         this.cy = cy;
     }
+
 
     render() {
         return (
