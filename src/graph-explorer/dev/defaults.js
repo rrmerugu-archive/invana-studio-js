@@ -1,4 +1,6 @@
-export const defaultsLayoutOptions = {
+import cytoscape from "cytoscape";
+
+export const defaultLayoutOptions = {
     name: "cola",
     animate: true, // whether to show the layout as it's running
     refresh: 1, // number of ticks per frame; higher is faster but more jerky
@@ -39,53 +41,54 @@ export const defaultsLayoutOptions = {
     allConstIter: undefined // initial layout iterations with all constraints including non-overlap
 };
 
-function makeid(length) {
-    var result = "";
-    var characters =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
 
-export function getNewData() {
-    let nodeTemplate = {
-        label: "RandomString",
-        metaType: "ellipse",
-        metaBgColor: "green",
-        metaBgImage: null
-    };
-
-    let nodeIds = [makeid(6), makeid(6), makeid(6), makeid(6)];
-    console.log("nodeIds", nodeIds);
-    let nodes = [];
-    nodeIds.forEach(function (nodeId) {
-        let _temp = JSON.parse(JSON.stringify(nodeTemplate));
-        _temp["id"] = nodeId;
-        nodes.push(_temp);
-    });
-
-    let edges = [
-        {
-            id: nodeIds[0] + "-" + nodeIds[1],
-            label: "Connection",
-            source: nodeIds[0],
-            target: nodeIds[1],
-            metaBgColor: "red",
-            metaLabelColor: "black"
-        },
-        {
-            id: nodeIds[2] + "-" + nodeIds[3],
-            label: "Connection",
-            source: nodeIds[2],
-            target: nodeIds[3],
-            metaBgColor: "red",
-            metaLabelColor: "black"
-        }
-    ];
-    console.log("new nodes", nodes);
-    console.log("new edges", edges);
-    return [nodes, edges];
+export const defaultCytoscapeOptions = {
+    boxSelectionEnabled: false,
+    autounselectify: true,
+    avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
+    avoidOverlapPadding: 10, // extra spacing around nodes when avoidOverlap: true
+    nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
+    style: cytoscape
+        .stylesheet()
+        .selector("node")
+        .style({
+            label: "data(id)",
+            "background-fit": "cover",
+            "border-color": "#333",
+            "border-width": 5,
+            "border-opacity": 0.5,
+            "background-color": "data(metaBgColor)",
+            shape: "data(metaType)"
+            // "background-image": "data(metaBgImage)"
+        })
+        .selector("edge")
+        .style({
+            "curve-style": "bezier",
+            "target-arrow-shape": "triangle",
+            width: 3,
+            label: "data(id)",
+            "line-color": "data(metaBgColor)",
+            "target-arrow-color": "data(metaBgColor)",
+            "text-background-opacity": 1,
+            color: "#444",
+            "text-background-color": "#efefef",
+            "text-background-shape": "roundrectangle",
+            "text-border-color": "#efefef",
+            "text-border-width": 1,
+            "text-border-opacity": 1,
+            "edge-text-rotation": "autorotate"
+        })
+        .selector(".highlighted")
+        .style({
+            "background-color": "#61bffc",
+            "line-color": "#61bffc",
+            "target-arrow-color": "#61bffc",
+            "transition-property":
+                "background-color, line-color, target-arrow-color",
+            "transition-duration": "0.5s"
+        }),
+    elements: {
+        nodes: [],
+        edges: []
+    },
 }
