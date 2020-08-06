@@ -22,12 +22,16 @@ export default class GEHeader extends React.Component {
     }
 
     changeLayoutToCircle() {
-        let layout = this.props.get_cy().elements().makeLayout({"name": "circle"});
+        const layoutOptions = defaultLayoutOptions;
+        layoutOptions.name = "circle"
+        let layout = this.props.get_cy().elements().makeLayout(layoutOptions);
         layout.run();
     }
 
     changeLayoutToCola() {
-        let layout = this.props.get_cy().elements().makeLayout({"name": "cola"});
+        const layoutOptions = defaultLayoutOptions;
+        layoutOptions.name = "cola"
+        let layout = this.props.get_cy().elements().makeLayout(layoutOptions);
         layout.run();
     }
 

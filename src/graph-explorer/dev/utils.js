@@ -36,6 +36,22 @@ export function getNewData() {
             metaLabelColor: "black"
         },
         {
+            id: nodeIds[1] + "-" + nodeIds[3],
+            label: "Connection",
+            source: nodeIds[1],
+            target: nodeIds[3],
+            metaBgColor: "red",
+            metaLabelColor: "black"
+        },
+        {
+            id: nodeIds[0] + "-" + nodeIds[3],
+            label: "Connection",
+            source: nodeIds[0],
+            target: nodeIds[3],
+            metaBgColor: "red",
+            metaLabelColor: "black"
+        },
+        {
             id: nodeIds[2] + "-" + nodeIds[3],
             label: "Connection",
             source: nodeIds[2],
