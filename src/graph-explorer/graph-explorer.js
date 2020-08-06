@@ -1,8 +1,8 @@
 import React from "react";
 import cytoscape from "cytoscape";
-import {getNewData} from "./dev/utils";
+import GEHeader from "./header";
 import {defaultCytoscapeOptions, defaultLayoutOptions} from "./dev/defaults";
-
+import "./graph-explorer.scss";
 import cola from "cytoscape-cola";
 
 cytoscape.use(cola);
@@ -31,38 +31,36 @@ export default class GraphExplorer extends React.Component {
         this.cy.nodes().unlock();
     }
 
-    updateData() {
+    updateData(nodes, edges) {
         let _this = this;
         this.lockNodes();
-        const _ = getNewData();
-        const newNodesData = _[0];
-        const newEdgesData = _[1];
 
-        let nodes = [];
+
+        let nodes_cleaned = [];
         // Create new parent
-        newNodesData.forEach(data => {
-            nodes.push({
+        nodes.forEach(data => {
+            nodes_cleaned.push({
                 group: "nodes",
                 data: data
             });
         });
 
-        let edges = [];
-        newEdgesData.forEach(data => {
-            edges.push({
+        let edges_cleaned = [];
+        edges.forEach(data => {
+            edges_cleaned.push({
                 group: "edges",
                 data: data
             });
         });
 
-        console.log("nodes", nodes);
-        console.log("edges", edges);
+        console.log("nodes", nodes_cleaned);
+        console.log("edges", edges_cleaned);
 
         if (this.layout) {
             this.layout.stop();
         }
-        this.cy.add(nodes);
-        this.cy.add(edges);
+        this.cy.add(nodes_cleaned);
+        this.cy.add(edges_cleaned);
 
         this.layout = this.cy.elements().makeLayout(defaultLayoutOptions);
         this.layout.run();
@@ -73,11 +71,22 @@ export default class GraphExplorer extends React.Component {
         });
     }
 
+    get_cy() {
+        return this.cy;
+    }
+
+    set_cy(cy){
+        this.cy = cy;
+    }
+
     render() {
         return (
             <div className="graph-explorer">
-                <button onClick={() => this.updateData()}>update</button>
-                <div id="graph-canvas"/>
+                <GEHeader updateData={this.updateData.bind(this)}
+                          get_cy={this.get_cy.bind(this)}
+                          set_cy={this.set_cy.bind(this)}
+                />
+                <div className={"graph-explorer-canvas"} id="graph-canvas"/>
             </div>
         );
     }
