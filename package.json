@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "color-hash": "^1.0.3",
     "cytoscape": "^3.15.2",
     "cytoscape-cola": "^2.4.0",
     "cytoscape-cxtmenu": "^3.1.2",

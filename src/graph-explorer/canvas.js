@@ -1,6 +1,6 @@
 import React from "react";
 import GEControl from "./controls";
-import "./canvas.scss";
+import "./graph-explorer.scss";
 
 
 export default class GECanvas extends React.Component {

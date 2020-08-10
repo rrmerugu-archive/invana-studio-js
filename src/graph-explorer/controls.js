@@ -1,5 +1,5 @@
 import React from "react";
-import {defaultLayoutOptions} from "./defaults";
+import {defaultLayoutOptions} from "./constants";
 import {makeQuery} from "./connector";
 import GremlinResponseSerializers from "./serializer";
 import {GREMLIN_URL} from "./constants";
@@ -27,9 +27,10 @@ export default class GEControl extends React.Component {
 
     clearCanvas() {
         this.props.getCyInstance().elements().remove();
-        this.props.getMenu().destroy();
+        // this.props.getMenu().destroy();
     }
-    centerCanvas(){
+
+    centerCanvas() {
         this.props.getCyInstance().centre();
     }
 

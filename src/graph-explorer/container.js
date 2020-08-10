@@ -1,7 +1,7 @@
 import React from "react";
 import GECanvas from "./canvas";
 import GEElementData from "./element-data";
-import {defaultContextMenuOptions, defaultCytoscapeOptions, defaultLayoutOptions} from "./defaults";
+import {defaultContextMenuOptions, defaultCytoscapeStyleOptions, defaultLayoutOptions} from "./constants";
 import {makeQuery} from "./connector";
 import {GREMLIN_URL} from "./constants";
 import cytoscape from "cytoscape";
@@ -87,7 +87,7 @@ export default class CanvasContainer extends React.Component {
 
     createCytoscapeInstance() {
         console.log("render graph triggered");
-        const layoutOptions = defaultCytoscapeOptions;
+        const layoutOptions = defaultCytoscapeStyleOptions;
         layoutOptions.container = document.querySelector("#graph-canvas");
         layoutOptions.layout = defaultLayoutOptions;
         return cytoscape(layoutOptions);
@@ -107,20 +107,26 @@ export default class CanvasContainer extends React.Component {
             const element = events.OnTap(event, this.cy)
             if (element) {
                 actions.highLightNeighbourNodes(element, _this.cy);
-                _this.setState({selectedElement: element});
             }
         });
 
         this.cy.on('tapdrag', (event) => events.onTagDrag(event, this.cy));
-        this.cy.on('tapdragout', (event) => events.onTapDragOut(event, this.cy));
+        this.cy.on('tapdragout', (event) => {
+            _this.setState({selectedElement: null});
+            events.onTapDragOut(event, _this.cy)
 
-        this.cy.on('tapstart', (event) => events.onTapStart(event, this.cy));
+        });
+
+        this.cy.on('tapstart', (event) => {
+            const element = events.OnTap(event, this.cy)
+
+            if (element) {
+                _this.setState({selectedElement: element});
+                events.onTapStart(event, this.cy)
+            }
+        });
         this.cy.on('tapend', (event) => events.onTapEnded(event, this.cy));
 
-        // this.cy.on('select', (event) => {
-        //     console.log("select triggered");
-        //     _this.setState({selectedElement: events.onSelect(event, _this.cy)});
-        // });
 
         this.cy.on('layoutstart', function (e) {
             // Notice the layoutstart event with the layout name.
