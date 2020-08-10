@@ -1,4 +1,6 @@
-import cytoscape from "cytoscape";
+/*
+
+ */
 
 // the default values of each option are outlined below:
 export const defaultContextMenuOptions = {
@@ -90,7 +92,7 @@ export const defaultCytoscapeOptions = {
         {
             selector: "node",
             style: {
-                label: (ele)=>  ele.data('bg'),
+                label: (ele) => ele.data('bg'),
                 "background-fit": "cover",
                 "border-color": "#333",
                 "border-width": 5,

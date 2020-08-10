@@ -9,7 +9,9 @@ import cxtmenu from "cytoscape-cxtmenu";
 import cola from "cytoscape-cola";
 import GremlinResponseSerializers from "./serializer";
 import GEEvents from "./events";
+import GEActions from "./actions";
 
+const actions = new GEActions();
 cytoscape.use(cxtmenu);
 cytoscape.use(cola);
 const gremlinSerializer = new GremlinResponseSerializers();
@@ -17,6 +19,12 @@ const gremlinSerializer = new GremlinResponseSerializers();
 
 export default class CanvasContainer extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedElement: null
+        }
+    }
 
     setupMenuOptions() {
 
@@ -92,15 +100,37 @@ export default class CanvasContainer extends React.Component {
         hovered, clicked, dragged, drag stopped etc.
 
          */
+        let _this = this;
         const events = new GEEvents();
 
-        this.cy.on('tap', (event) => events.OnTap(event, this.cy));
+        this.cy.on('tap', (event) => {
+            const element = events.OnTap(event, this.cy)
+            if (element) {
+                actions.highLightNeighbourNodes(element, _this.cy);
+                _this.setState({selectedElement: element});
+            }
+        });
 
         this.cy.on('tapdrag', (event) => events.onTagDrag(event, this.cy));
         this.cy.on('tapdragout', (event) => events.onTapDragOut(event, this.cy));
 
         this.cy.on('tapstart', (event) => events.onTapStart(event, this.cy));
         this.cy.on('tapend', (event) => events.onTapEnded(event, this.cy));
+
+        // this.cy.on('select', (event) => {
+        //     console.log("select triggered");
+        //     _this.setState({selectedElement: events.onSelect(event, _this.cy)});
+        // });
+
+        this.cy.on('layoutstart', function (e) {
+            // Notice the layoutstart event with the layout name.
+            console.log('layoutstart', e.target.options.name);
+        });
+
+        this.cy.on('layoutstop', function (e) {
+            // Notice the layoutstop event with the layout name.
+            console.log('layoutstop', e.target.options.name);
+        });
     }
 
     lockNodes() {
@@ -169,8 +199,6 @@ export default class CanvasContainer extends React.Component {
     }
 
     render() {
-
-        console.log("cy, ", this.getCyInstance());
         return (
             <div className="App">
                 <GECanvas
@@ -179,7 +207,7 @@ export default class CanvasContainer extends React.Component {
                     getMenu={this.getMenu.bind(this)}
                     updateData={this.updateData.bind(this)}
                 />
-                <GEElementOptions/>
+                <GEElementOptions selectedElement={this.state.selectedElement}/>
             </div>
         );
     }

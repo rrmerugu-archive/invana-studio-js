@@ -5,7 +5,7 @@ import "./canvas.scss";
 
 export default class GECanvas extends React.Component {
 
-    defaultProps = {
+    static defaultProps = {
         getCyInstance: () => console.error("getCyInstance prop not set in GECanvas"),
         setCyInstance: () => console.error("setCyInstance prop not set in GECanvas"),
         getMenu: () => console.error("getMenu prop not set in GECanvas"),
@@ -15,13 +15,13 @@ export default class GECanvas extends React.Component {
 
     render() {
         return (
-            <div className="graph-explorer">
+            <div className="graphExplorer">
                 <GEControl updateData={this.props.updateData.bind(this)}
                            getCyInstance={this.props.getCyInstance.bind(this)}
                            setCyInstance={this.props.setCyInstance.bind(this)}
                            getMenu={this.props.getMenu.bind(this)}
                 />
-                <div className={"graph-explorer-canvas"} id="graph-canvas"/>
+                <div className={"graphExplorerCanvas"} id="graph-canvas"/>
             </div>
         );
     }

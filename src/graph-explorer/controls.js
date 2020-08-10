@@ -27,7 +27,10 @@ export default class GEControl extends React.Component {
 
     clearCanvas() {
         this.props.getCyInstance().elements().remove();
-        // this.props.getMenu().destroy();
+        this.props.getMenu().destroy();
+    }
+    centerCanvas(){
+        this.props.getCyInstance().centre();
     }
 
     changeLayoutToCircle() {
@@ -76,8 +79,9 @@ export default class GEControl extends React.Component {
 
     render() {
         return (
-            <div className="graph-explorer-header">
+            <div className="graphExplorerControls">
                 <button onClick={() => this.redrawCanvas()}>re-draw</button>
+                <button onClick={() => this.centerCanvas()}>center</button>
                 <button onClick={() => this.clearCanvas()}>clear</button>
                 <button onClick={() => this.lockPositions()}>lock positions</button>
                 <button onClick={() => this.unLockPositions()}>unlock positions</button>

@@ -1,20 +1,26 @@
 import React from "react";
 
 
+export default class GEElementOptions extends React.Component {
 
-export default class GEElementOptions extends  React.Component{
 
-    constructor(props) {
-        super(props);
+    static defaultProps = {
+        selectedElement: null
     }
 
-    defaultProps = {
-        options : null
+    getData() {
+        try {
+            return this.props.selectedElement.data()
+        } catch (e) {
+            return null;
+        }
     }
 
     render() {
-        return <div className={"elementOptions"}>
+        return this.getData() ? <div className={"graphExplorerElementOptions"}>
+            <h3>Element options</h3>
+            {JSON.stringify(this.getData())}
+        </div> : <span></span>
 
-        </div>
     }
 }

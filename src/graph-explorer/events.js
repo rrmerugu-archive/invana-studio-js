@@ -8,13 +8,14 @@ export default class GEEvents {
         // console.info("onTap event triggered");
         if (event.target === cy) {
             // console.info('tap on background');
-
+            return null;
         } else {
             const node = event.target;
             console.log('tapped ' + node.id());
             console.log('tap on some element');
-            actions.highLightNeighbourNodes(node, cy);
+            return node;
         }
+
     }
 
 
@@ -52,6 +53,15 @@ export default class GEEvents {
             // console.info('dragEnded on background ignored');
         } else {
             actions.unHighLightNeighbourNodes(event.target, cy);
+        }
+    }
+
+    onSelect(event, cy) {
+        if (event.target === cy) {
+            // console.info('dragEnded on background ignored');
+            return null;
+        } else {
+            return event.target;
         }
     }
 
