@@ -1,7 +1,7 @@
 import React from "react";
 
 
-export default class GEElementOptions extends React.Component {
+export default class GEElementData extends React.Component {
 
 
     static defaultProps = {

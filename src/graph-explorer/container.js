@@ -1,6 +1,6 @@
 import React from "react";
 import GECanvas from "./canvas";
-import GEElementOptions from "./options";
+import GEElementData from "./element-data";
 import {defaultContextMenuOptions, defaultCytoscapeOptions, defaultLayoutOptions} from "./defaults";
 import {makeQuery} from "./connector";
 import {GREMLIN_URL} from "./constants";
@@ -207,7 +207,7 @@ export default class CanvasContainer extends React.Component {
                     getMenu={this.getMenu.bind(this)}
                     updateData={this.updateData.bind(this)}
                 />
-                <GEElementOptions selectedElement={this.state.selectedElement}/>
+                <GEElementData selectedElement={this.state.selectedElement}/>
             </div>
         );
     }
