@@ -8,13 +8,13 @@ import GEActions from "./actions";
 const gremlinSerializer = new GremlinResponseSerializers();
 const actions = new GEActions();
 
-export default class GEHeader extends React.Component {
+export default class GEControl extends React.Component {
 
     static defaultProps = {
-        get_menu: () => console.error("get_menu prop not declared in GEHeader "),
-        get_cy: () => console.error("get_cy prop not declared in GEHeader "),
-        set_cy: () => console.error("set_cy prop not declared in GEHeader "),
-        updateData: (nodes, edges) => console.log("updateData prop not declared in GEHeader")
+        getMenu: () => console.error("getMenu prop not declared in GEControl "),
+        getCyInstance: () => console.error("getCyInstance prop not declared in GEControl "),
+        setCyInstance: () => console.error("setCyInstance prop not declared in GEControl "),
+        updateData: (nodes, edges) => console.log("updateData prop not declared in GEControl")
     }
 
     constructor(props) {
@@ -26,35 +26,35 @@ export default class GEHeader extends React.Component {
 
 
     clearCanvas() {
-        this.props.get_cy().elements().remove();
-        // this.props.get_menu().destroy();
+        this.props.getCyInstance().elements().remove();
+        // this.props.getMenu().destroy();
     }
 
     changeLayoutToCircle() {
         const layoutOptions = defaultLayoutOptions;
         layoutOptions.name = "circle"
-        let layout = this.props.get_cy().elements().makeLayout(layoutOptions);
+        let layout = this.props.getCyInstance().elements().makeLayout(layoutOptions);
         layout.run();
     }
 
     changeLayoutToCola() {
         const layoutOptions = defaultLayoutOptions;
         layoutOptions.name = "cola"
-        let layout = this.props.get_cy().elements().makeLayout(layoutOptions);
+        let layout = this.props.getCyInstance().elements().makeLayout(layoutOptions);
         layout.run();
     }
 
     redrawCanvas() {
-        const layout = this.props.get_cy().elements().layout(defaultLayoutOptions);
+        const layout = this.props.getCyInstance().elements().layout(defaultLayoutOptions);
         layout.run();
     }
 
     lockPositions() {
-        this.props.get_cy().nodes().lock();
+        this.props.getCyInstance().nodes().lock();
     }
 
     unLockPositions() {
-        this.props.get_cy().nodes().unlock();
+        this.props.getCyInstance().nodes().unlock();
     }
 
     handleSubmit(event) {
@@ -89,8 +89,8 @@ export default class GEHeader extends React.Component {
                 <button onClick={() => this.changeLayoutToCircle()}>ct circle </button>
                 <button onClick={() => this.changeLayoutToCola()}>ct cola</button>
                 |
-                <button onClick={() => actions.saveImage("png", this.props.get_cy())}>save png</button>
-                <button onClick={() => actions.saveImage("jpg", this.props.get_cy())}>save jpg</button>
+                <button onClick={() => actions.saveImage("png", this.props.getCyInstance())}>save png</button>
+                <button onClick={() => actions.saveImage("jpg", this.props.getCyInstance())}>save jpg</button>
 
             </div>
         );
