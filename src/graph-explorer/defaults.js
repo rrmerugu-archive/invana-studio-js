@@ -19,7 +19,7 @@ export const defaultContextMenuOptions = {
 
     ], // function( ele ){ return [ /*...*/ ] }, // a function that returns commands or a promise of commands
     fillColor: 'rgba(0, 0, 0, 0.75)', // the background colour of the menu
-    activeFillColor: 'rgba(1, 105, 217, 0.75)', // the colour used to indicate the selected command
+    activeFillColor: 'rgba(6,163,76,0.75)', // the colour used to indicate the selected command
     activePadding: 20, // additional size in pixels for the active command
     indicatorSize: 24, // the size in pixels of the pointer to the active command
     separatorWidth: 3, // the empty spacing in pixels between successive commands
@@ -75,51 +75,64 @@ export const defaultLayoutOptions = {
 };
 
 
+/*
+
+selector: 'node[type="human"]',
+
+ */
 export const defaultCytoscapeOptions = {
     boxSelectionEnabled: false,
     autounselectify: true,
     avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
     avoidOverlapPadding: 10, // extra spacing around nodes when avoidOverlap: true
     nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
-    style: cytoscape
-        .stylesheet()
-        .selector("node")
-        .style({
-            label: "data(id)",
-            "background-fit": "cover",
-            "border-color": "#333",
-            "border-width": 5,
-            "border-opacity": 0.5,
-            "background-color": "data(metaBgColor)",
-            shape: "data(metaType)"
-            // "background-image": "data(metaBgImage)"
-        })
-        .selector("edge")
-        .style({
-            "curve-style": "bezier",
-            "target-arrow-shape": "triangle",
-            width: 3,
-            label: "data(id)",
-            "line-color": "data(metaBgColor)",
-            "target-arrow-color": "data(metaBgColor)",
-            "text-background-opacity": 1,
-            color: "#444",
-            "text-background-color": "#efefef",
-            "text-background-shape": "roundrectangle",
-            "text-border-color": "#efefef",
-            "text-border-width": 1,
-            "text-border-opacity": 1,
-            "edge-text-rotation": "autorotate"
-        })
-        .selector(".highlighted")
-        .style({
-            "background-color": "#61bffc",
-            "line-color": "#61bffc",
-            "target-arrow-color": "#61bffc",
-            "transition-property":
-                "background-color, line-color, target-arrow-color",
-            "transition-duration": "0.5s"
-        }),
+    style: [
+        {
+            selector: "node",
+            style: {
+                label: (ele)=>  ele.data('bg'),
+                "background-fit": "cover",
+                "border-color": "#333",
+                "border-width": 5,
+                "border-opacity": 0.5,
+                "background-color": "data(metaBgColor)",
+                shape: "data(metaType)"
+                // "background-image": "data(metaBgImage)"
+            },
+
+        }
+        , {
+            selector: "edge",
+            style: {
+                "curve-style": "bezier",
+                "target-arrow-shape": "triangle",
+                width: 3,
+                label: "data(id)",
+                "line-color": "data(metaBgColor)",
+                "target-arrow-color": "data(metaBgColor)",
+                "text-background-opacity": 1,
+                color: "#444",
+                "text-background-color": "#efefef",
+                "text-background-shape": "roundrectangle",
+                "text-border-color": "#efefef",
+                "text-border-width": 1,
+                "text-border-opacity": 1,
+                "edge-text-rotation": "autorotate"
+            }
+        },
+        {
+            selector: ".highlighted",
+            style: {
+                "background-color": "#61bffc",
+                "line-color": "#61bffc",
+                "target-arrow-color": "#61bffc",
+                "transition-property":
+                    "background-color, line-color, target-arrow-color",
+                "transition-duration": "0.5s"
+            }
+        }
+
+    ],
     elements: {
         nodes: [],
         edges: []

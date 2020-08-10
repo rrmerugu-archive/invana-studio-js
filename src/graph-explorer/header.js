@@ -3,11 +3,12 @@ import {defaultLayoutOptions} from "./defaults";
 import {makeQuery} from "./connector";
 import GremlinResponseSerializers from "./serializer";
 import {GREMLIN_URL} from "./constants";
+import GEActions from "./actions";
 
 const gremlinSerializer = new GremlinResponseSerializers();
+const actions = new GEActions();
 
 export default class GEHeader extends React.Component {
-
 
     static defaultProps = {
         get_menu: () => console.error("get_menu prop not declared in GEHeader "),
@@ -87,6 +88,9 @@ export default class GEHeader extends React.Component {
                 |
                 <button onClick={() => this.changeLayoutToCircle()}>ct circle </button>
                 <button onClick={() => this.changeLayoutToCola()}>ct cola</button>
+                |
+                <button onClick={() => actions.saveImage("png", this.props.get_cy())}>save png</button>
+                <button onClick={() => actions.saveImage("jpg", this.props.get_cy())}>save jpg</button>
 
             </div>
         );

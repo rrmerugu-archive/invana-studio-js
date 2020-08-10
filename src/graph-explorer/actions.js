@@ -32,4 +32,19 @@ export default class GEActions {
         cy.edges("[target='" + node.id() + "']").removeClass('highlighted');
     }
 
+    saveImage(imageType, cy) {
+        let image64 = null;
+        if (imageType === 'png') {
+            image64 = cy.png();
+        } else {
+            image64 = cy.jpg();
+        }
+
+        let imageElement = document.createElement("a"); //Create <a>
+        imageElement.href = "data:image/png;base64," + image64; //Image Base64 Goes here
+        imageElement.download = "Image.png"; //File name Here
+        imageElement.click(); //Downloaded file
+
+    }
+
 }
