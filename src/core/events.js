@@ -1,5 +1,3 @@
-
-
 export default class GEEvents {
 
     constructor(props) {
@@ -17,6 +15,9 @@ export default class GEEvents {
         const element = event.target === cy ? null : event.target
         if (element) {
             this.props.controller.highLightNeighbourNodes(element);
+        } else {
+            // on background click
+            this.props.updateState({selectedElement: null});
         }
     }
 
@@ -57,7 +58,7 @@ export default class GEEvents {
         } else {
             this.props.controller.unHighLightNeighbourNodes(event.target, this.props.controller.getCy());
         }
-        this.props.updateState({selectedElement: null});
+        // this.props.updateState({selectedElement: null});
 
     }
 

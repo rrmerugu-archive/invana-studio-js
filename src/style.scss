@@ -2,6 +2,10 @@
   height: 100%;
 }
 
+html, body {
+  font-size: 14px;
+}
+
 $primaryColor: "#818561";
 
 .graphExplorerHeader {
@@ -27,7 +31,7 @@ $primaryColor: "#818561";
       line-height: 24px;
       border-right: 1px solid #cbcbcb;
       color: #454545;
-        padding: 0 10px;
+      padding: 0 10px;
 
       a {
         text-decoration: none;
@@ -53,9 +57,44 @@ $primaryColor: "#818561";
 .graphExplorerElementOptions {
   position: fixed;
   right: 0;
-  top: 0;
+  top: 25px;
   border-left: 1px solid #efefef;
-  height: 100vh;
+  height: calc(100vh - 25px);
   width: 300px;
+  z-index: 998;
+
+  h3 {
+
+  }
+
+}
+
+.card {
+
+  .card-header {
+    background: #cccccc;
+    padding: 4px 5px;
+
+    h3 {
+      margin: 5px 0 3px 0;
+      font-size: 14px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 12px;
+      color: #565656;
+    }
+  }
+  .card-body{
+    padding: 5px;
+    .singleProperty{
+      border-bottom: 1px solid #efefef;
+    }
+    .singleProperty:last-child{
+      border-bottom: none;
+    }
+  }
+
 
 }

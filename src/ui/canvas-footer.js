@@ -26,7 +26,7 @@ export default class GECanvasFooter extends React.Component {
             <div className="graphExplorerFooter">
                 <ul>
                     <li>
-                        <a href="javascript:void(0)">Nodes Locked</a>
+                        Nodes Locked
                     </li>
                     <li>
                         {this.getNodesCount()} Nodes; {this.getEdgesCount()} edges;

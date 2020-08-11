@@ -129,7 +129,6 @@ export default class GECanvasContainer extends React.Component {
     }
 
     getController(){
-        console.log("getController", this.controller);
         return this.controller;
     }
 
