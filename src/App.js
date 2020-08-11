@@ -1,6 +1,5 @@
 import React from "react";
 import "./App.css";
-import GECanvas from "./graph-explorer/canvas";
 import CanvasContainer from "./graph-explorer/container";
 
 export default class App extends React.Component {

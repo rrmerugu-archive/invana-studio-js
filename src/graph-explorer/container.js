@@ -10,6 +10,7 @@ import cola from "cytoscape-cola";
 import GremlinResponseSerializers from "./serializer";
 import GEEvents from "./events";
 import GEActions from "./actions";
+import {centerElement} from "./utils";
 
 const actions = new GEActions();
 cytoscape.use(cxtmenu);
@@ -46,6 +47,11 @@ export default class CanvasContainer extends React.Component {
                         const result = gremlinSerializer.process(response)
                         const nodesAndLinks = gremlinSerializer.separateVerticesAndEdges(result, false);
                         _this.updateData(nodesAndLinks['nodes'], nodesAndLinks['links']);
+                        _this.layout.on("layoutstop", function () {
+                            centerElement(ele, _this.cy);
+                        });
+
+
                     }
                 )
             },
@@ -55,19 +61,25 @@ export default class CanvasContainer extends React.Component {
             content: 'outV', // html/text content to be displayed in the menu
             contentStyle: {}, // css key:value pairs to set the command's css in js if you want
             select: function (ele) { // a function to execute when the command is selected
-
                 console.log(ele.id()); // `ele` holds the reference to the active element
                 const nodeId = ele.id();
-
                 let query_string = "node=g.V(" + nodeId + ").toList(); " +
                     "edges = g.V(" + nodeId + ").inE().dedup().toList(); " +
                     "other_nodes = g.V(" + nodeId + ").inE().otherV().dedup().toList();" +
                     "[other_nodes,edges,node]";
+                console.log("nodeId", nodeId);
+
                 makeQuery(GREMLIN_URL, query_string,
                     (response) => {
                         const result = gremlinSerializer.process(response)
                         const nodesAndLinks = gremlinSerializer.separateVerticesAndEdges(result, false);
                         _this.updateData(nodesAndLinks['nodes'], nodesAndLinks['links']);
+                        if (nodesAndLinks['nodes'].length > 0) {
+                            _this.layout.on("layoutstop", function () {
+                                centerElement(ele, _this.cy);
+                            });
+
+                        }
                     }
                 )
 
@@ -114,7 +126,6 @@ export default class CanvasContainer extends React.Component {
         this.cy.on('tapdragout', (event) => {
             _this.setState({selectedElement: null});
             events.onTapDragOut(event, _this.cy)
-
         });
 
         this.cy.on('tapstart', (event) => {

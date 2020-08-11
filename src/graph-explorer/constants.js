@@ -1,11 +1,11 @@
-import {getColorForString} from "./utils";
+import {getColorForString, getElementNameOrId} from "./utils";
 
 export const GREMLIN_URL = "http://localhost:9600/gremlin";
 
 
 // the default values of each option are outlined below:
 export const defaultContextMenuOptions = {
-    menuRadius: 100, // the radius of the circular menu in pixels
+    menuRadius: 80, // the radius of the circular menu in pixels
     selector: 'node', // elements matching this Cytoscape.js selector will trigger cxtmenus
     commands: [ // an array of commands to list in the menu or a function that returns the array
         /*
@@ -24,7 +24,7 @@ export const defaultContextMenuOptions = {
     fillColor: 'rgba(0, 0, 0, 0.75)', // the background colour of the menu
     activeFillColor: 'rgba(6,163,76,0.75)', // the colour used to indicate the selected command
     activePadding: 20, // additional size in pixels for the active command
-    indicatorSize: 24, // the size in pixels of the pointer to the active command
+    indicatorSize: 14, // the size in pixels of the pointer to the active command
     separatorWidth: 3, // the empty spacing in pixels between successive commands
     spotlightPadding: 4, // extra spacing in pixels between the element and the spotlight
     minSpotlightRadius: 24, // the minimum radius in pixels of the spotlight
@@ -42,7 +42,7 @@ export const defaultLayoutOptions = {
     refresh: 1, // number of ticks per frame; higher is faster but more jerky
     maxSimulationTime: 1500, // max length in ms to run the layout
     ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
-    // fit: true, // on every layout reposition of nodes, fit the viewport
+    fit: false, // on every layout reposition of nodes, fit the viewport
     padding: 30, // padding around the simulation
     boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
     nodeDimensionsIncludeLabels: true, // whether labels should be included in determining the space used by a node
@@ -93,32 +93,30 @@ export const defaultCytoscapeStyleOptions = {
         {
             selector: "node",
             style: {
-                label: (ele) => {
-                    return ele.data() && ele.data()['properties'] && ele.data()['properties']['name'] ? ele.data()['properties']['name'] : ele.data()['id']
-                },
+                label: (ele) => getElementNameOrId(ele.data()),
+                shape: (ele) => "ellipse", // https://js.cytoscape.org/#style/node-body
                 "background-fit": "cover",
-                "border-color": "#333",
+                "border-color": (ele) => getColorForString(ele.data()['label']),
                 "border-width": 5,
                 "border-opacity": 0.5,
                 "background-color": (ele) => getColorForString(ele.data()['label']),
-                shape: "data(metaType)"
-                // "background-image": "data(metaBgImage)"
+                "background-image": (ele) => {
+                    return null;
+                }
             },
 
         }
         , {
             selector: "edge",
             style: {
+                label: (ele) => getElementNameOrId(ele.data()),
+                color: (ele) => getColorForString(ele.data()['label']),
+                "line-color": (ele) => getColorForString(ele.data()['label']),
+                "target-arrow-color": (ele) => getColorForString(ele.data()['label']),
                 "curve-style": "bezier",
                 "target-arrow-shape": "triangle",
                 width: 3,
-                label: (ele) => {
-                    return ele.data() && ele.data()['properties'] && ele.data()['properties']['name'] ? ele.data()['properties']['name'] : ele.data()['id']
-                },
-                "line-color": (ele) => getColorForString(ele.data()['label']),
-                "target-arrow-color": (ele) => getColorForString(ele.data()['label']),
                 "text-background-opacity": 0.8,
-                color: (ele) => getColorForString(ele.data()['label']),
                 "text-background-color": "#efefef",
                 "text-background-shape": "roundrectangle",
                 "text-border-color": "#efefef",
@@ -133,8 +131,7 @@ export const defaultCytoscapeStyleOptions = {
                 "background-color": "#61bffc",
                 "line-color": "#61bffc",
                 "target-arrow-color": "#61bffc",
-                "transition-property":
-                    "background-color, line-color, target-arrow-color",
+                "transition-property": "background-color, line-color, target-arrow-color",
                 "transition-duration": "0.5s"
             }
         }

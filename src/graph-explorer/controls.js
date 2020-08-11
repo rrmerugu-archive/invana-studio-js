@@ -31,7 +31,7 @@ export default class GEControl extends React.Component {
     }
 
     centerCanvas() {
-        this.props.getCyInstance().centre();
+        this.props.getCyInstance().centre(this.props.getCyInstance().elements());
     }
 
     changeLayoutToCircle() {
@@ -49,6 +49,7 @@ export default class GEControl extends React.Component {
     }
 
     redrawCanvas() {
+        this.centerCanvas();
         const layout = this.props.getCyInstance().elements().layout(defaultLayoutOptions);
         layout.run();
     }
