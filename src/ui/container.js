@@ -10,7 +10,7 @@ import cola from "cytoscape-cola";
 import GremlinResponseSerializers from "../gremlin/serializer";
 import GEEvents from "../core/events";
 import GEActions from "../core/actions";
-import {centerElement} from "../utils";
+import {centerElement} from "../core/utils";
 
 const actions = new GEActions();
 cytoscape.use(cxtmenu);
