@@ -52,9 +52,9 @@ export default class GECanvasContainer extends React.Component {
         this.setState(data);
     }
 
-    setupMenuOptions() {
+    setupMenuOptions(controller) {
         let menuOptions = defaultContextMenuOptions;
-        menuOptions.commands = generateMenuItems(this.props.menuCommands);
+        menuOptions.commands = generateMenuItems(this.props.menuCommands, controller);
         return this.controller.getCy().cxtmenu(defaultContextMenuOptions);
     }
 
@@ -75,7 +75,7 @@ export default class GECanvasContainer extends React.Component {
             updateState: this.updateState.bind(this),
             controller: this.controller
         });
-        this.menu = this.setupMenuOptions();
+        this.menu = this.setupMenuOptions(this.controller);
         this.setupDefaultEvents(); //
     }
 

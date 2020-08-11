@@ -22,18 +22,14 @@ export function getElementNameOrId(element) {
     }
 }
 
-export function centerElement(element, cy) {
-    cy.center(element);
 
-}
-
-export function generateMenuItems(items) {
+export function generateMenuItems(items, controller) {
 
     let menuItems = [];
     Object.keys(items).forEach(function (key) {
         let itemData = JSON.parse(JSON.stringify(defaultMenuItemConfig));
         itemData.content = key;
-        itemData.select = items[key];
+        itemData.select = (elem) => items[key](elem, controller);
         menuItems.push(itemData)
     });
 

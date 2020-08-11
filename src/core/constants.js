@@ -7,16 +7,16 @@ export const GREMLIN_URL = "http://localhost:9600/gremlin";
 Over rider the keys: content, select
  */
 export const defaultMenuItemConfig = {
-    fillColor: 'rgba(200, 200, 200, 0.75)', // optional: custom background color for item
+    fillColor: 'rgba(52,52,52,0.75)', // optional: custom background color for item
     content: null, // html/text content to be displayed in the menu
-    contentStyle: {}, // css key:value pairs to set the command's css in js if you want
+    contentStyle: {"color": "#cdcdcd", "font-size": "12px"}, // css key:value pairs to set the command's css in js if you want
     select: (ele) => console.log("command triggered, but action not set"),
     enabled: true // whether the command is selectable
 }
 
 // the default values of each option are outlined below:
 export const defaultContextMenuOptions = {
-    menuRadius: 80, // the radius of the circular menu in pixels
+    menuRadius: 70, // the radius of the circular menu in pixels
     selector: 'node', // elements matching this Cytoscape.js selector will trigger cxtmenus
     commands: [ // an array of commands to list in the menu or a function that returns the array
         /*
@@ -34,11 +34,11 @@ export const defaultContextMenuOptions = {
     ], // function( ele ){ return [ /*...*/ ] }, // a function that returns commands or a promise of commands
     fillColor: 'rgba(0, 0, 0, 0.75)', // the background colour of the menu
     activeFillColor: 'rgba(6,163,76,0.75)', // the colour used to indicate the selected command
-    activePadding: 20, // additional size in pixels for the active command
+    activePadding: 5, // additional size in pixels for the active command
     indicatorSize: 14, // the size in pixels of the pointer to the active command
-    separatorWidth: 3, // the empty spacing in pixels between successive commands
+    separatorWidth: 0, // the empty spacing in pixels between successive commands
     spotlightPadding: 4, // extra spacing in pixels between the element and the spotlight
-    minSpotlightRadius: 24, // the minimum radius in pixels of the spotlight
+    minSpotlightRadius: 18, // the minimum radius in pixels of the spotlight
     maxSpotlightRadius: 38, // the maximum radius in pixels of the spotlight
     openMenuEvents: 'cxttapstart tap', // space-separated cytoscape events that will open the menu; only `cxttapstart` and/or `taphold` work here
     itemColor: 'white', // the colour of text in the command's content

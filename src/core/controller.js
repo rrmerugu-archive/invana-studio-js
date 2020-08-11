@@ -1,5 +1,5 @@
 import cytoscape from "cytoscape";
-import {defaultCytoscapeStyleOptions, defaultLayoutOptions} from "./constants";
+import {defaultLayoutOptions} from "./constants";
 
 
 export default class GEController {
@@ -163,6 +163,10 @@ export default class GEController {
 
     unLockPositions() {
         this.getCy().nodes().unlock();
+    }
+
+    centerElement(element) {
+        this.getCy().center(element);
     }
 
     extendInV(nodeId) {

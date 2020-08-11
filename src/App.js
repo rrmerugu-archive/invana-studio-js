@@ -3,59 +3,58 @@ import GECanvasContainer from "./ui/container";
 import {GREMLIN_URL} from "./core/constants";
 
 const menuCommands = {
-    "inV": (ele) => console.log("inV Command triggered"),
-    "outV": (ele) => console.log("outV Command triggered"),
-    "close": (ele) => console.log("close Command triggered"),
-    "allV": (ele) => console.log("allV Command triggered"),
+    "close": (ele, controller) => console.log("close Command triggered"),
+    "outV": (ele, controller) => {
+        const nodeId = ele.id();
+        console.log("inV Command triggered " + nodeId);
+        // TODO - optimise the query
+        const queryString = "node=g.V(" + nodeId + ").toList(); " +
+            "edges = g.V(" + nodeId + ").outE().dedup().toList(); " +
+            "other_nodes = g.V(" + nodeId + ").outE().otherV().dedup().toList();" +
+            "[other_nodes,edges,node]";
+        controller.getConnector().makeQuery(queryString, (nodesAndLinks) => {
+            if (nodesAndLinks['nodes'].length > 0) {
+                controller.getLayout().on("layoutstop", function () {
+                    controller.centerElement(ele);
+                });
+            }
+        })
+    },
+    "allV": (ele, controller) => {
+        const nodeId = ele.id();
+        console.log("allV Command triggered " + nodeId);
+        // TODO - optimise the query
+        let queryString = "node=g.V(" + nodeId + ").toList(); " +
+            "edges = g.V(" + nodeId + ").bothE().dedup().toList(); " +
+            "other_nodes = g.V(" + nodeId + ").bothE().otherV().dedup().toList();" +
+            "[other_nodes,edges,node]";
+        controller.getConnector().makeQuery(queryString, (nodesAndLinks) => {
+            if (nodesAndLinks['nodes'].length > 0) {
+                controller.getLayout().on("layoutstop", function () {
+                    controller.centerElement(ele);
+                });
+            }
+        })
+    },
+    "inV": (ele, controller) => {
+        const nodeId = ele.id();
+        console.log("outV Command triggered " + nodeId);
+        // TODO - optimise the query
+        let queryString = "node=g.V(" + nodeId + ").toList(); " +
+            "edges = g.V(" + nodeId + ").inE().dedup().toList(); " +
+            "other_nodes = g.V(" + nodeId + ").inE().otherV().dedup().toList();" +
+            "[other_nodes,edges,node]";
+        controller.getConnector().makeQuery(queryString, (nodesAndLinks) => {
+            if (nodesAndLinks['nodes'].length > 0) {
+                controller.getLayout().on("layoutstop", function () {
+                    controller.centerElement(ele);
+                });
+            }
+        })
+    },
+    "options": (ele, controller) => console.log("options Command triggered"),
 }
 
-
-// const menuCommands = [{ // example command
-//     fillColor: 'rgba(200, 200, 200, 0.75)', // optional: custom background color for item
-//     content: 'inV', // html/text content to be displayed in the menu
-//     contentStyle: {}, // css key:value pairs to set the command's css in js if you want
-//     select: function (ele) { // a function to execute when the command is selected
-//         console.log(ele.id()); // `ele` holds the reference to the active element
-//         const nodeId = ele.id();
-//         const queryString = "node=g.V(" + nodeId + ").toList(); " +
-//             "edges = g.V(" + nodeId + ").outE().dedup().toList(); " +
-//             "other_nodes = g.V(" + nodeId + ").outE().otherV().dedup().toList();" +
-//             "[other_nodes,edges,node]";
-//
-//         this.props.connector.makeQuery(queryString, (nodesAndLinks) => {
-//             if (nodesAndLinks['nodes'].length > 0) {
-//                 _this.layout.on("layoutstop", function () {
-//                     centerElement(ele, _this.);
-//                 });
-//             }
-//         })
-//
-//     },
-//     enabled: true // whether the command is selectable
-// }, { // example command
-//     fillColor: 'rgba(200, 200, 200, 0.75)', // optional: custom background color for item
-//     content: 'outV', // html/text content to be displayed in the menu
-//     contentStyle: {}, // css key:value pairs to set the command's css in js if you want
-//     select: function (ele) { // a function to execute when the command is selected
-//         console.log(ele.id()); // `ele` holds the reference to the active element
-//         const nodeId = ele.id();
-//         let queryString = "node=g.V(" + nodeId + ").toList(); " +
-//             "edges = g.V(" + nodeId + ").inE().dedup().toList(); " +
-//             "other_nodes = g.V(" + nodeId + ").inE().otherV().dedup().toList();" +
-//             "[other_nodes,edges,node]";
-//         console.log("nodeId", nodeId);
-//
-//         _this.connector.makeQuery(queryString, (nodesAndLinks) => {
-//             if (nodesAndLinks['nodes'].length > 0) {
-//                 _this.layout.on("layoutstop", function () {
-//                     centerElement(ele, _this.cy);
-//                 });
-//             }
-//         })
-//
-//     },
-//     enabled: true // whether the command is selectable
-// }]
 
 export default class App extends React.Component {
 
