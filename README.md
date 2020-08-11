@@ -6,19 +6,24 @@ This component would be used in building the [graph-explorer](https://github.com
  project for creating graph data visualisations.
 
 
-
+## Install 
+```shell script
+npm install invanalabs/graph-explorer-js#master  --save 
+```
 
 ## Usage
 ```javascript
 import React from "react";
-import GECanvas from "./graph-explorer/canvas";
+import GECanvasContainer from "./src/ui/container";
+
+const GREMLIN_URL = "http://localhost:8182/gremlin"
 
 export default class App extends React.Component {
 
     render() {
         return (
             <div className="App">
-                <GECanvas/>
+                <GECanvasContainer gremlinUrl={GREMLIN_URL}/>
             </div>
         );
     }

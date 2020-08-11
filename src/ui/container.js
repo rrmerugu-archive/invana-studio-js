@@ -2,8 +2,6 @@ import React from "react";
 import GECanvas from "./canvas";
 import GEElementData from "./element-data";
 import {defaultContextMenuOptions, defaultCytoscapeStyleOptions, defaultLayoutOptions} from "../core/constants";
-import {makeQuery} from "../gremlin/connector";
-import {GREMLIN_URL} from "../core/constants";
 import cytoscape from "cytoscape";
 import cxtmenu from "cytoscape-cxtmenu";
 import cola from "cytoscape-cola";
@@ -11,6 +9,7 @@ import GremlinResponseSerializers from "../gremlin/serializer";
 import GEEvents from "../core/events";
 import GEActions from "../core/actions";
 import {centerElement} from "../core/utils";
+import {HTTPConnector} from "../gremlin/connector";
 
 const actions = new GEActions();
 cytoscape.use(cxtmenu);
@@ -18,13 +17,41 @@ cytoscape.use(cola);
 const gremlinSerializer = new GremlinResponseSerializers();
 
 
-export default class CanvasContainer extends React.Component {
+export default class GECanvasContainer extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             selectedElement: null
         }
+
+        this.connector = new HTTPConnector({
+            gremlinUrl: this.props.gremlinUrl,
+            extraHeaders: {},
+            callback: this.processResponse.bind(this)
+        })
+    }
+
+    processResponse(response, extraCallback) {
+        /*
+        This method will get response from gremlin server and
+        separates them into nodes and links.
+
+        extraCallback is triggered after the updateData func.
+
+        returns {"nodes": [], "links": []}
+         */
+        const result = gremlinSerializer.process(response)
+        const nodesAndLinks = gremlinSerializer.separateVerticesAndEdges(result, false);
+        this.updateData(nodesAndLinks['nodes'], nodesAndLinks['links']);
+        if (extraCallback) {
+            extraCallback(nodesAndLinks);
+        }
+
+    }
+
+    static defaultProps = {
+        gremlinUrl: null
     }
 
     setupMenuOptions() {
@@ -42,18 +69,15 @@ export default class CanvasContainer extends React.Component {
                     "edges = g.V(" + nodeId + ").outE().dedup().toList(); " +
                     "other_nodes = g.V(" + nodeId + ").outE().otherV().dedup().toList();" +
                     "[other_nodes,edges,node]";
-                makeQuery(GREMLIN_URL, query_string,
-                    (response) => {
-                        const result = gremlinSerializer.process(response)
-                        const nodesAndLinks = gremlinSerializer.separateVerticesAndEdges(result, false);
-                        _this.updateData(nodesAndLinks['nodes'], nodesAndLinks['links']);
-                        if (nodesAndLinks['nodes'].length > 0) {
-                            _this.layout.on("layoutstop", function () {
-                                centerElement(ele, _this.cy);
-                            });
-                        }
+
+                _this.connector.makeQuery(query_string, (nodesAndLinks) => {
+                    if (nodesAndLinks['nodes'].length > 0) {
+                        _this.layout.on("layoutstop", function () {
+                            centerElement(ele, _this.cy);
+                        });
                     }
-                )
+                })
+
             },
             enabled: true // whether the command is selectable
         }, { // example command
@@ -69,19 +93,13 @@ export default class CanvasContainer extends React.Component {
                     "[other_nodes,edges,node]";
                 console.log("nodeId", nodeId);
 
-                makeQuery(GREMLIN_URL, query_string,
-                    (response) => {
-                        const result = gremlinSerializer.process(response)
-                        const nodesAndLinks = gremlinSerializer.separateVerticesAndEdges(result, false);
-                        _this.updateData(nodesAndLinks['nodes'], nodesAndLinks['links']);
-                        if (nodesAndLinks['nodes'].length > 0) {
-                            _this.layout.on("layoutstop", function () {
-                                centerElement(ele, _this.cy);
-                            });
-
-                        }
+                _this.connector.makeQuery(query_string, (nodesAndLinks) => {
+                    if (nodesAndLinks['nodes'].length > 0) {
+                        _this.layout.on("layoutstop", function () {
+                            centerElement(ele, _this.cy);
+                        });
                     }
-                )
+                })
 
             },
             enabled: true // whether the command is selectable
@@ -223,6 +241,7 @@ export default class CanvasContainer extends React.Component {
                     setCyInstance={this.setCyInstance.bind(this)}
                     getMenu={this.getMenu.bind(this)}
                     updateData={this.updateData.bind(this)}
+                    connector={this.connector}
                 />
                 <GEElementData selectedElement={this.state.selectedElement}/>
             </div>

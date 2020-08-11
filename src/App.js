@@ -1,12 +1,13 @@
 import React from "react";
-import CanvasContainer from "./ui/container";
+import GECanvasContainer from "./ui/container";
+import {GREMLIN_URL} from "./core/constants";
 
 export default class App extends React.Component {
 
     render() {
         return (
             <div className="App">
-                <CanvasContainer/>
+                <GECanvasContainer gremlinUrl={GREMLIN_URL}/>
             </div>
         );
     }

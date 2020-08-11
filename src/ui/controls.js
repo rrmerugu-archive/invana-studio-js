@@ -1,6 +1,5 @@
 import React from "react";
 import {defaultLayoutOptions} from "../core/constants";
-import {makeQuery} from "../gremlin/connector";
 import GremlinResponseSerializers from "../gremlin/serializer";
 import {GREMLIN_URL} from "../core/constants";
 import GEActions from "../core/actions";
@@ -14,7 +13,8 @@ export default class GEControl extends React.Component {
         getMenu: () => console.error("getMenu prop not declared in GEControl "),
         getCyInstance: () => console.error("getCyInstance prop not declared in GEControl "),
         setCyInstance: () => console.error("setCyInstance prop not declared in GEControl "),
-        updateData: (nodes, edges) => console.log("updateData prop not declared in GEControl")
+        updateData: (nodes, edges) => console.log("updateData prop not declared in GEControl"),
+        connector: null
     }
 
     constructor(props) {
@@ -64,14 +64,7 @@ export default class GEControl extends React.Component {
 
     handleSubmit(event) {
         console.log('A name was submitted: ' + this.state.queryText);
-        const _this = this;
-        makeQuery(GREMLIN_URL, this.state.queryText,
-            (response) => {
-                const result = gremlinSerializer.process(response)
-                const nodesAndLinks = gremlinSerializer.separateVerticesAndEdges(result, false);
-                _this.props.updateData(nodesAndLinks['nodes'], nodesAndLinks['links']);
-            }
-        )
+        this.props.connector.makeQuery(this.state.queryText)
         event.preventDefault();
     }
 
