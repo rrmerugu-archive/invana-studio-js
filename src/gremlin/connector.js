@@ -1,5 +1,3 @@
-import GremlinResponseSerializers from "./serializer";
-
 export async function postData(url = '', extraHeaders = {}, data = {}) {
     // Default options are marked with *
     const url_analysed = new URL(url);

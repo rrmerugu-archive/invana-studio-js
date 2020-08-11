@@ -3,6 +3,17 @@ import {getColorForString, getElementNameOrId} from "./utils";
 export const GREMLIN_URL = "http://localhost:9600/gremlin";
 
 
+/*
+Over rider the keys: content, select
+ */
+export const defaultMenuItemConfig = {
+    fillColor: 'rgba(200, 200, 200, 0.75)', // optional: custom background color for item
+    content: null, // html/text content to be displayed in the menu
+    contentStyle: {}, // css key:value pairs to set the command's css in js if you want
+    select: (ele) => console.log("command triggered, but action not set"),
+    enabled: true // whether the command is selectable
+}
+
 // the default values of each option are outlined below:
 export const defaultContextMenuOptions = {
     menuRadius: 80, // the radius of the circular menu in pixels

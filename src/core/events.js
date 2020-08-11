@@ -1,63 +1,68 @@
-import GEActions from "./actions";
 
-const actions = new GEActions();
 
 export default class GEEvents {
 
-    OnTap(event, cy) {
+    constructor(props) {
+        this.props = props;
+    }
+
+    static defaultProps = {
+        controller: null,
+        updateState: null
+    }
+
+    OnTap(event) {
         // console.info("onTap event triggered");
-        if (event.target === cy) {
-            // console.info('tap on background');
-            return null;
-        } else {
-            const node = event.target;
-            console.log('tapped ' + node.id());
-            console.log('tap on some element');
-            return node;
+        const cy = this.props.controller.getCy();
+        const element = event.target === cy ? null : event.target
+        if (element) {
+            this.props.controller.highLightNeighbourNodes(element);
         }
-
     }
 
 
-    onTagDrag(event, cy) {
+    onTagDrag(event) {
         // console.info("dragStarted event triggered");
-        if (event.target === cy) {
-            // console.info('dragStarted on background ignored');
-        } else {
-            actions.highLightNeighbourNodes(event.target, cy);
-            // actions.unLockNeighbors(event.target);
+        const cy = this.props.controller.getCy();
+        const element = event.target === cy ? null : event.target
+        if (element) {
+            this.props.controller.highLightNeighbourNodes(event.target);
         }
+
     }
 
-    onTapStart(event, cy) {
+    onTapStart(event) {
         // console.info("onTapStart event triggered");
-        if (event.target === cy) {
+        if (event.target === this.props.controller.getCy()) {
             // console.info('dragStarted on background ignored');
         } else {
-            actions.unLockNeighbors(event.target);
-            actions.highLightNeighbourNodes(event.target, cy);
-            // actions.unLockNeighbors(event.target);
+            this.props.controller.unLockNeighbors(event.target);
+            this.props.controller.highLightNeighbourNodes(event.target);
+            this.props.updateState({selectedElement: event.target});
+
         }
     }
 
-    onTapEnded(event, cy) {
-        if (event.target === cy) {
+    onTapEnded(event) {
+        if (event.target === this.props.controller.getCy()) {
             // console.info('dragEnded on background ignored');
         } else {
-            actions.unHighLightNeighbourNodes(event.target, cy);
+            this.props.controller.unHighLightNeighbourNodes(event.target, this.props.controller.getCy());
         }
     }
 
-    onTapDragOut(event, cy) {
-        if (event.target === cy) {
+    onTapDragOut(event) {
+        if (event.target === this.props.controller.getCy()) {
             // console.info('dragEnded on background ignored');
         } else {
-            actions.unHighLightNeighbourNodes(event.target, cy);
+            this.props.controller.unHighLightNeighbourNodes(event.target, this.props.controller.getCy());
         }
+        this.props.updateState({selectedElement: null});
+
     }
 
-    onSelect(event, cy) {
-        if (event.target === cy) {
+    onElementSelect(event) {
+        if (event.target === this.props.controller.getCy()) {
             // console.info('dragEnded on background ignored');
             return null;
         } else {

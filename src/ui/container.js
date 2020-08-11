@@ -2,22 +2,24 @@ import React from "react";
 import GECanvas from "./canvas";
 import GEElementData from "./element-data";
 import {defaultContextMenuOptions, defaultCytoscapeStyleOptions, defaultLayoutOptions} from "../core/constants";
-import cytoscape from "cytoscape";
-import cxtmenu from "cytoscape-cxtmenu";
-import cola from "cytoscape-cola";
 import GremlinResponseSerializers from "../gremlin/serializer";
 import GEEvents from "../core/events";
-import GEActions from "../core/actions";
-import {centerElement} from "../core/utils";
+import GEController from "../core/controller";
+import {createCyInstance, generateMenuItems} from "../core/utils";
 import {HTTPConnector} from "../gremlin/connector";
+import GECanvasHeader from "./canvas-header";
 
-const actions = new GEActions();
-cytoscape.use(cxtmenu);
-cytoscape.use(cola);
+
 const gremlinSerializer = new GremlinResponseSerializers();
 
 
 export default class GECanvasContainer extends React.Component {
+
+    static defaultProps = {
+        gremlinUrl: null,
+        menuCommands: [],
+        graphElementId: null
+    }
 
     constructor(props) {
         super(props);
@@ -25,11 +27,7 @@ export default class GECanvasContainer extends React.Component {
             selectedElement: null
         }
 
-        this.connector = new HTTPConnector({
-            gremlinUrl: this.props.gremlinUrl,
-            extraHeaders: {},
-            callback: this.processResponse.bind(this)
-        })
+
     }
 
     processResponse(response, extraCallback) {
@@ -50,199 +48,96 @@ export default class GECanvasContainer extends React.Component {
 
     }
 
-    static defaultProps = {
-        gremlinUrl: null
+    updateState(data) {
+        this.setState(data);
     }
 
     setupMenuOptions() {
-
-        let _this = this;
         let menuOptions = defaultContextMenuOptions;
-        menuOptions.commands = [{ // example command
-            fillColor: 'rgba(200, 200, 200, 0.75)', // optional: custom background color for item
-            content: 'inV', // html/text content to be displayed in the menu
-            contentStyle: {}, // css key:value pairs to set the command's css in js if you want
-            select: function (ele) { // a function to execute when the command is selected
-                console.log(ele.id()); // `ele` holds the reference to the active element
-                const nodeId = ele.id();
-                const query_string = "node=g.V(" + nodeId + ").toList(); " +
-                    "edges = g.V(" + nodeId + ").outE().dedup().toList(); " +
-                    "other_nodes = g.V(" + nodeId + ").outE().otherV().dedup().toList();" +
-                    "[other_nodes,edges,node]";
-
-                _this.connector.makeQuery(query_string, (nodesAndLinks) => {
-                    if (nodesAndLinks['nodes'].length > 0) {
-                        _this.layout.on("layoutstop", function () {
-                            centerElement(ele, _this.cy);
-                        });
-                    }
-                })
-
-            },
-            enabled: true // whether the command is selectable
-        }, { // example command
-            fillColor: 'rgba(200, 200, 200, 0.75)', // optional: custom background color for item
-            content: 'outV', // html/text content to be displayed in the menu
-            contentStyle: {}, // css key:value pairs to set the command's css in js if you want
-            select: function (ele) { // a function to execute when the command is selected
-                console.log(ele.id()); // `ele` holds the reference to the active element
-                const nodeId = ele.id();
-                let query_string = "node=g.V(" + nodeId + ").toList(); " +
-                    "edges = g.V(" + nodeId + ").inE().dedup().toList(); " +
-                    "other_nodes = g.V(" + nodeId + ").inE().otherV().dedup().toList();" +
-                    "[other_nodes,edges,node]";
-                console.log("nodeId", nodeId);
-
-                _this.connector.makeQuery(query_string, (nodesAndLinks) => {
-                    if (nodesAndLinks['nodes'].length > 0) {
-                        _this.layout.on("layoutstop", function () {
-                            centerElement(ele, _this.cy);
-                        });
-                    }
-                })
-
-            },
-            enabled: true // whether the command is selectable
-        }];
-        this.menu = this.cy.cxtmenu(defaultContextMenuOptions);
-
-
+        menuOptions.commands = generateMenuItems(this.props.menuCommands);
+        return this.controller.getCy().cxtmenu(defaultContextMenuOptions);
     }
 
     componentDidMount() {
-        this.cy = this.createCytoscapeInstance();
-        this.setupNodeEvents(); //
-        this.setupMenuOptions();
+
+        const cyOptions = defaultCytoscapeStyleOptions;
+        cyOptions.container = document.querySelector("#" + this.props.graphElementId);
+        cyOptions.layout = defaultLayoutOptions;
+        let cy = createCyInstance(cyOptions);
+        this.connector = new HTTPConnector({
+            gremlinUrl: this.props.gremlinUrl,
+            extraHeaders: {},
+            callback: this.processResponse.bind(this)
+        })
+
+        this.controller = new GEController({cy: cy, connector: this.connector})
+        this.events = new GEEvents({
+            updateState: this.updateState.bind(this),
+            controller: this.controller
+        });
+        this.menu = this.setupMenuOptions();
+        this.setupDefaultEvents(); //
     }
 
-    createCytoscapeInstance() {
-        console.log("render graph triggered");
-        const layoutOptions = defaultCytoscapeStyleOptions;
-        layoutOptions.container = document.querySelector("#graph-canvas");
-        layoutOptions.layout = defaultLayoutOptions;
-        return cytoscape(layoutOptions);
-    }
 
-
-    setupNodeEvents() {
+    setupDefaultEvents() {
         /*
         this will set events for what happens when node is
         hovered, clicked, dragged, drag stopped etc.
 
          */
-        let _this = this;
-        const events = new GEEvents();
 
-        this.cy.on('tap', (event) => {
-            const element = events.OnTap(event, this.cy)
-            if (element) {
-                actions.highLightNeighbourNodes(element, _this.cy);
-            }
-        });
+        this.controller.getCy().on('tap', (event) => this.events.OnTap(event));
 
-        this.cy.on('tapdrag', (event) => events.onTagDrag(event, this.cy));
-        this.cy.on('tapdragout', (event) => {
-            _this.setState({selectedElement: null});
-            events.onTapDragOut(event, _this.cy)
-        });
+        this.controller.getCy().on('tapdrag', (event) => this.events.onTagDrag(event));
+        this.controller.getCy().on('tapdragout', (event) => this.events.onTapDragOut(event));
 
-        this.cy.on('tapstart', (event) => {
-            const element = events.OnTap(event, this.cy)
+        this.controller.getCy().on('tapstart', (event) => this.events.onTapStart(event));
+        this.controller.getCy().on('tapend', (event) => this.events.onTapEnded(event));
 
-            if (element) {
-                _this.setState({selectedElement: element});
-                events.onTapStart(event, this.cy)
-            }
-        });
-        this.cy.on('tapend', (event) => events.onTapEnded(event, this.cy));
-
-
-        this.cy.on('layoutstart', function (e) {
+        this.controller.getCy().on('layoutstart', function (e) {
             // Notice the layoutstart event with the layout name.
             console.log('layoutstart', e.target.options.name);
         });
 
-        this.cy.on('layoutstop', function (e) {
+        this.controller.getCy().on('layoutstop', function (e) {
             // Notice the layoutstop event with the layout name.
             console.log('layoutstop', e.target.options.name);
         });
     }
 
-    lockNodes() {
-        console.log("lockNodes triggered");
-        this.cy.nodes().lock();
-    }
-
-    unlockNodes() {
-        console.log("unlockNodes triggered");
-        this.cy.nodes().unlock();
-    }
 
     updateData(nodes, edges) {
         let _this = this;
-        this.lockNodes();
-
-
-        let nodes_cleaned = [];
-        // Create new parent
-        nodes.forEach(data => {
-            nodes_cleaned.push({
-                group: "nodes",
-                data: data
-            });
-        });
-
-        let edges_cleaned = [];
-        edges.forEach(data => {
-            edges_cleaned.push({
-                group: "edges",
-                data: data
-            });
-        });
-
-        console.log("nodes", nodes_cleaned);
-        console.log("edges", edges_cleaned);
+        this.controller.lockNodes();
+        const nodesCleaned = this.controller.convertNodes2CyNodes(nodes);
+        const edgesCleaned = this.controller.convertEdges2CyEdges(edges);
 
         if (this.layout) {
             this.layout.stop();
         }
-        this.cy.add(nodes_cleaned);
-        this.cy.add(edges_cleaned);
+        this.controller.addElements(nodesCleaned);
+        this.controller.addElements(edgesCleaned);
 
-        this.layout = this.cy.elements().makeLayout(defaultLayoutOptions);
+        this.layout = this.controller.getLayout();
         this.layout.run();
-
         this.layout.on("layoutstop", function () {
-            _this.unlockNodes();
+            _this.controller.unlockNodes();
             //... unload spinner here
         });
-        // _this.unlockNodes();
-
     }
 
-
-    getMenu() {
-        return this.menu;
+    getController(){
+        console.log("getController", this.controller);
+        return this.controller;
     }
 
-    getCyInstance() {
-        return this.cy;
-    }
-
-    setCyInstance(cy) {
-        this.cy = cy;
-    }
 
     render() {
         return (
-            <div className="App">
-                <GECanvas
-                    getCyInstance={this.getCyInstance.bind(this)}
-                    setCyInstance={this.setCyInstance.bind(this)}
-                    getMenu={this.getMenu.bind(this)}
-                    updateData={this.updateData.bind(this)}
-                    connector={this.connector}
-                />
+            <div className="graphExplorer">
+                <GECanvasHeader getController={this.getController.bind(this)}/>
+                <GECanvas graphElementId={this.props.graphElementId}/>
                 <GEElementData selectedElement={this.state.selectedElement}/>
             </div>
         );
