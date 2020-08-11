@@ -69,6 +69,15 @@ $primaryColor: "#818561";
 
 }
 
+.ge-thumbnail {
+  border: 1px solid #ddd;
+  //width: 200px;
+  height: 130px;
+  position: fixed;
+  bottom: 25px;
+  left: 0;
+}
+
 .card {
 
   .card-header {
@@ -86,12 +95,15 @@ $primaryColor: "#818561";
       color: #565656;
     }
   }
-  .card-body{
+
+  .card-body {
     padding: 5px;
-    .singleProperty{
+
+    .singleProperty {
       border-bottom: 1px solid #efefef;
     }
-    .singleProperty:last-child{
+
+    .singleProperty:last-child {
       border-bottom: none;
     }
   }

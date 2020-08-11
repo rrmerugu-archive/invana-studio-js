@@ -82,7 +82,7 @@ export default class GEController {
 
         let imageElement = document.createElement("a"); //Create <a>
         imageElement.href = "data:image/png;base64," + image64; //Image Base64 Goes here
-        imageElement.download = "Image.png"; //File name Here
+        imageElement.download = "image.png"; //File name Here
         imageElement.click(); //Downloaded file
 
     }

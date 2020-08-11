@@ -9,6 +9,7 @@ import {createCyInstance, generateMenuItems} from "../core/utils";
 import {HTTPConnector} from "../gremlin/connector";
 import GECanvasHeader from "./canvas-header";
 import GECanvasFooter from "./canvas-footer";
+import GECanvasThumbnail from "./canvas-thumbnail";
 
 
 const gremlinSerializer = new GremlinResponseSerializers();
@@ -140,6 +141,7 @@ export default class GECanvasContainer extends React.Component {
                 <GECanvas graphElementId={this.props.graphElementId}/>
                 <GECanvasFooter  getController={this.getController.bind(this)}/>
                 <GEElementData selectedElement={this.state.selectedElement}/>
+                <GECanvasThumbnail getController={this.getController.bind(this)} />
             </div>
         );
     }
