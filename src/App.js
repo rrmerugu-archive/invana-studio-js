@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import CanvasContainer from "./graph-explorer/container";
+import CanvasContainer from "./ui/container";
 
 export default class App extends React.Component {
 

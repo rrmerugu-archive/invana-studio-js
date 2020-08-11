@@ -1,9 +1,9 @@
 import React from "react";
-import {defaultLayoutOptions} from "./constants";
-import {makeQuery} from "./connector";
-import GremlinResponseSerializers from "./serializer";
-import {GREMLIN_URL} from "./constants";
-import GEActions from "./actions";
+import {defaultLayoutOptions} from "../core/constants";
+import {makeQuery} from "../gremlin/connector";
+import GremlinResponseSerializers from "../gremlin/serializer";
+import {GREMLIN_URL} from "../core/constants";
+import GEActions from "../core/actions";
 
 const gremlinSerializer = new GremlinResponseSerializers();
 const actions = new GEActions();

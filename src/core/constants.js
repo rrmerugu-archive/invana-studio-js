@@ -1,4 +1,4 @@
-import {getColorForString, getElementNameOrId} from "./utils";
+import {getColorForString, getElementNameOrId} from "../utils";
 
 export const GREMLIN_URL = "http://localhost:9600/gremlin";
 

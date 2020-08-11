@@ -1,16 +1,16 @@
 import React from "react";
 import GECanvas from "./canvas";
 import GEElementData from "./element-data";
-import {defaultContextMenuOptions, defaultCytoscapeStyleOptions, defaultLayoutOptions} from "./constants";
-import {makeQuery} from "./connector";
-import {GREMLIN_URL} from "./constants";
+import {defaultContextMenuOptions, defaultCytoscapeStyleOptions, defaultLayoutOptions} from "../core/constants";
+import {makeQuery} from "../gremlin/connector";
+import {GREMLIN_URL} from "../core/constants";
 import cytoscape from "cytoscape";
 import cxtmenu from "cytoscape-cxtmenu";
 import cola from "cytoscape-cola";
-import GremlinResponseSerializers from "./serializer";
-import GEEvents from "./events";
-import GEActions from "./actions";
-import {centerElement} from "./utils";
+import GremlinResponseSerializers from "../gremlin/serializer";
+import GEEvents from "../core/events";
+import GEActions from "../core/actions";
+import {centerElement} from "../utils";
 
 const actions = new GEActions();
 cytoscape.use(cxtmenu);
