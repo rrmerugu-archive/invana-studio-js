@@ -43,6 +43,7 @@ export default class GECanvasHeader extends React.Component {
                 |
                 <button onClick={() => this.props.getController().changeLayoutToCircle()}>ct circle </button>
                 <button onClick={() => this.props.getController().changeLayoutToCola()}>ct cola</button>
+                <button onClick={() => this.props.getController().changeLayoutToConcentricCircle()}>ct concentric</button>
                 |
                 <button onClick={() => this.props.getController().saveImage("png")}>save png</button>
                 <button onClick={() => this.props.getController().saveImage("jpg")}>save jpg</button>

@@ -2,14 +2,50 @@
   height: 100%;
 }
 
+$primaryColor: "#818561";
+
 .graphExplorerHeader {
   border-bottom: 1px solid #cbcbcb;
   background: #efefef;
   height: 24px;
 }
 
+.graphExplorerFooter {
+  border-top: 1px solid #cbcbcb;
+  background: #efefef;
+  height: 24px;
+  font-size: 12px;
+
+  ul {
+    padding: 0;
+    margin: 0;
+
+    li {
+      //padding: 0;
+      display: inline-block;
+      vertical-align: center;
+      line-height: 24px;
+      border-right: 1px solid #cbcbcb;
+      color: #454545;
+        padding: 0 10px;
+
+      a {
+        text-decoration: none;
+        color: #454545;
+      }
+
+      a:hover {
+        color: $primaryColor;
+        background: $primaryColor;
+      }
+
+
+    }
+  }
+}
+
 .graphExplorerCanvas {
-  height: calc(100vh - 24px - 1px - 25px);
+  height: calc(100vh - 24px - 1px - 24px - 1px);
   position: relative;
   //background: #454545;
 }

@@ -151,6 +151,19 @@ export default class GEController {
         layout.run();
     }
 
+    changeLayoutToConcentricCircle() {
+        const layoutOptions = defaultLayoutOptions;
+        layoutOptions.name = 'concentric';
+        layoutOptions.concentric = function (node) {
+            return node.degree();
+        };
+        layoutOptions.levelWidth = function (nodes) {
+            return 2;
+        }
+        let layout = this.getCy().elements().makeLayout(layoutOptions);
+        layout.run();
+    }
+
     redrawCanvas() {
         this.centerCanvas();
         const layout = this.getCy().elements().layout(defaultLayoutOptions);
@@ -169,7 +182,7 @@ export default class GEController {
         this.getCy().center(elements);
     }
 
-    fit(elements){
+    fit(elements) {
         this.getCy().fit(elements);
     }
 
