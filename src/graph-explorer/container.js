@@ -47,11 +47,11 @@ export default class CanvasContainer extends React.Component {
                         const result = gremlinSerializer.process(response)
                         const nodesAndLinks = gremlinSerializer.separateVerticesAndEdges(result, false);
                         _this.updateData(nodesAndLinks['nodes'], nodesAndLinks['links']);
-                        _this.layout.on("layoutstop", function () {
-                            centerElement(ele, _this.cy);
-                        });
-
-
+                        if (nodesAndLinks['nodes'].length > 0) {
+                            _this.layout.on("layoutstop", function () {
+                                centerElement(ele, _this.cy);
+                            });
+                        }
                     }
                 )
             },
