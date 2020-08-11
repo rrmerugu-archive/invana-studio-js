@@ -111,9 +111,9 @@ export const defaultCytoscapeStyleOptions = {
                 "border-width": 5,
                 "border-opacity": 0.5,
                 "background-color": (ele) => getColorForString(ele.data()['label']),
-                "background-image": (ele) => {
-                    return null;
-                }
+                "transition-property": "background-color, line-color, target-arrow-color",
+                "transition-duration": "0.5s",
+
             },
 
         }
@@ -145,7 +145,16 @@ export const defaultCytoscapeStyleOptions = {
                 "transition-property": "background-color, line-color, target-arrow-color",
                 "transition-duration": "0.5s"
             }
+        },
+        {
+            selector: ".nodeWithBgImage",
+            style: {
+                "background-image": (ele) => {
+                    return null;
+                }
+            }
         }
+
 
     ],
     elements: {

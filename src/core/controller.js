@@ -165,8 +165,12 @@ export default class GEController {
         this.getCy().nodes().unlock();
     }
 
-    centerElement(element) {
-        this.getCy().center(element);
+    centerElement(elements) {
+        this.getCy().center(elements);
+    }
+
+    fit(elements){
+        this.getCy().fit(elements);
     }
 
     extendInV(nodeId) {

@@ -30,6 +30,7 @@ export default class GECanvasHeader extends React.Component {
     render() {
         return (
             <div className="graphExplorerHeader">
+                <button onClick={() => this.props.getController().fit()}>fit</button>
                 <button onClick={() => this.props.getController().redrawCanvas()}>re-draw</button>
                 <button onClick={() => this.props.getController().centerCanvas()}>center</button>
                 <button onClick={() => this.props.getController().clearCanvas()}>clear</button>
