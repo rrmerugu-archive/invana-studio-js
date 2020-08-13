@@ -186,6 +186,14 @@ export default class GEController {
         this.getCy().fit(elements);
     }
 
+    showLabelsOfViewportNodesOnly() {
+        this.getCy().nodes().forEach((node) => {
+
+            // node.css()
+            // this.showOverlayFunction(node.data().id);
+        });
+    }
+
     extendInV(nodeId) {
 
     }
