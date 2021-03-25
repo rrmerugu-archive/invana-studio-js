@@ -2,9 +2,11 @@
 
 Javascript library to build data graph using GraphSON data.
 
+**NOTE** THIS IS AN EXPERIMENT PROJECT.
+
+
 This component would be used in building the [graph-explorer](https://github.com/invanalabs/graph-explorer)
  project for creating graph data visualisations.
-
 
 ## Install 
 ```shell script
